@@ -1,0 +1,56 @@
+<html>
+    <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+       <link rel="stylesheet" href="index.css">
+       <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Smythe&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>Jimmy's Burger</h1>
+            <h2>The best burgers and pizza in town</h2>            
+        </header>
+    <div class="wrap">
+            <div class="menu" id="menu">
+                
+            </div>
+                
+        <div class="summary hidden" id="basket">
+                <div id="basketHeader" class="hidden">
+                <h2 class="summaryTitle" id="basketTitle">Your order</h2>
+                </div>
+                <div id="summary">
+                    <!-- <div class="currentOrder" id="currentOrder">
+                        <div class="orderedItem">
+                            <div class="itemSummary">
+                                <h2>Pizza</h2>
+                                <button class="removeBtn" id="removeBtn">remove</button>
+                            </div>
+                                <h2>$12</h2>
+                        </div>
+                    </div> -->
+                </div>
+                <div id="checkout">
+                <!-- <div class="checkout">
+                    <h2>Total price:</h2>
+                    <h2> $26</h2>
+                </div> -->
+                </div>
+                <div id="btnWrapper">
+                    <button class="orderBtn" id="orderBtn">Complete order</button>
+                </div>
+        </div>
+        <div id="modal" class="modal hidden">
+            <div class="modal-inner" id="modal-inner">
+                <h1 id="modal-header">Enter card details</h1>
+                <form name="cardDetails" id="form">
+                    <input type="text" data-input="input" name="name" id="inputName" placeholder="Enter your name" required>
+                    <input type="tel" data-input="input" name="card" id="inputCard" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="Enter your credit card number" required>
+                    <input type="password" data-input="input" name="cvc" id="inputCvc" placeholder="Enter your CVC" minlength="3" maxlength="4" required>
+                </form>
+                    <button id="submitCard" class="submitBtn">Confirm order</button>    
+            </div>
+        </div> 
+    </div>   
+	    <script src="index.js" type="module"></script>
+    </body>
+</html>
+
