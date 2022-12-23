@@ -18,21 +18,10 @@
                 <h2 class="summaryTitle" id="basketTitle">Your order</h2>
                 </div>
                 <div id="summary">
-                    <!-- <div class="currentOrder" id="currentOrder">
-                        <div class="orderedItem">
-                            <div class="itemSummary">
-                                <h2>Pizza</h2>
-                                <button class="removeBtn" id="removeBtn">remove</button>
-                            </div>
-                                <h2>$12</h2>
-                        </div>
-                    </div> -->
+                   
                 </div>
                 <div id="checkout">
-                <!-- <div class="checkout">
-                    <h2>Total price:</h2>
-                    <h2> $26</h2>
-                </div> -->
+               
                 </div>
                 <div id="btnWrapper">
                     <button class="orderBtn" id="orderBtn">Complete order</button>
@@ -41,12 +30,13 @@
         <div id="modal" class="modal hidden">
             <div class="modal-inner" id="modal-inner">
                 <h1 id="modal-header">Enter card details</h1>
-                <form name="cardDetails" id="form">
+                <form name="form" id="form">
                     <input type="text" data-input="input" name="name" id="inputName" placeholder="Enter your name" required>
-                    <input type="tel" data-input="input" name="card" id="inputCard" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="Enter your credit card number" required>
-                    <input type="password" data-input="input" name="cvc" id="inputCvc" placeholder="Enter your CVC" minlength="3" maxlength="4" required>
+                    <input type="tel" data-input="input" name="card" id="inputCard" minlength="18" maxlength="19" placeholder="Enter your credit card number" required>
+                    <input type="tel" data-input="input" name="cvc" id="inputCvc" placeholder="Enter your CVC" minlength="3" maxlength="3" required>
+                    <button id="submitCard" class="submitBtn" type="submit">Confirm order</button>
                 </form>
-                    <button id="submitCard" class="submitBtn">Confirm order</button>    
+                
             </div>
         </div> 
     </div>   

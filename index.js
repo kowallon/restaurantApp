@@ -2,9 +2,7 @@ import { menuArray } from "./data.js"
 
 //TO Dos && Ideas
 
-//Enhance modal after submiting (loading GIF)
-//Add correct order number (save last in local storage, get and increment when getting new order)
-//Add promotion if e.g pizza + beer is bought
+//Validate card input
 //Add timer for delivery time (e.g Pizza = 15 min, Burger = 20min, Pizza + Burger = 25 min etc...)
 //More items (main categories: pizza, burger, drinks - more options will show on clicking on category icon)
 //Dark theme
@@ -15,6 +13,11 @@ import { menuArray } from "./data.js"
 
 let myOrderArr = []
 let order = document.getElementById("orderBtn")
+let orderNo = 1
+let hasBeer = false
+let hasPizza = false
+let eligibleForDiscount = false
+
 
 
 document.addEventListener("click", function(e){
@@ -37,21 +40,18 @@ document.addEventListener("click", function(e){
                 e.target.id != "form" &&
                 e.target.id != "modal-header" &&
                 e.target.id != "modal-inner"){
-            console.log(e)
             closeModal()
         }
     
     else if (e.target.id == "submitCard"){
-        submitOrder()
         e.preventDefault()
-    }
-    
-})
+        submitOrder() 
+        }  
+    })
 
 order.addEventListener("click", function(){
     document.getElementById("modal").classList.remove("hidden")
 })
-
 
 
 function handleAddClick(itemId){
@@ -68,30 +68,85 @@ function renderSummary(){
 
     document.getElementById("basketHeader").classList.remove("hidden")
 
-    myOrderArr.forEach(function(orderedMeal){
-        summaryHTML += `<div class="currentOrder" id="currentOrder">
-        <div class="orderedItem">
-            <div class="itemSummary">
-            <h2>${orderedMeal.name}</h2>
-            <button class="removeBtn" id="removeBtn" data-remove="${orderedMeal.id}">remove</button>
-            </div>
-            <h2 id="singleItemPrice">$${orderedMeal.price}</h2>
-        </div>
-    </div>`
+    myOrderArr.forEach(function(item){
+        if(item.name === "Beer"){
+           hasBeer = true
+        } else if (item.name === "Pizza"){
+            hasPizza = true
+        }
+    })
 
-    totalcost += orderedMeal.price
+    if(hasBeer && hasPizza){
+        eligibleForDiscount = true
+    }
+    
+    
+
+    myOrderArr.forEach(function(orderedMeal){
+
+        
+        if(eligibleForDiscount){
+            summaryHTML += `
+            <div class="currentOrder" id="currentOrder">
+                <div class="orderedItem">
+                    <div class="itemSummary">
+                    <h2>${orderedMeal.name}</h2>
+                    <button class="removeBtn" id="removeBtn" data-remove="${orderedMeal.id}">remove</button>
+                    </div>
+                    <h2 id="singleItemPrice">$${orderedMeal.price} <span class="promo">- $${(orderedMeal.price * 0.1).toFixed(2)}</span></h2>
+                </div>
+            </div>`
+
+            totalcost += orderedMeal.price
+        } else {
+            summaryHTML += `
+            <div class="currentOrder" id="currentOrder">
+                <div class="orderedItem">
+                    <div class="itemSummary">
+                    <h2>${orderedMeal.name}</h2>
+                    <button class="removeBtn" id="removeBtn" data-remove="${orderedMeal.id}">remove</button>
+                    </div>
+                    <h2 id="singleItemPrice">$${orderedMeal.price}</h2>
+                </div>
+            </div>`
+
+            totalcost += orderedMeal.price
+        }
+        
+
+
     })
     document.getElementById("summary").innerHTML = summaryHTML            
    
-    let checkoutHTML = ``
+    if(eligibleForDiscount){
+        let discounted = totalcost - totalcost * 0.1
+        discounted.toFixed(2)
+        let discountVal = totalcost - discounted
+
+        let discountedPrice = totalcost - discountVal
+        
+        let checkoutHTML = ``
         checkoutHTML += `<div class="checkout">
         <h2>Total price:</h2>
-        <h2>$${totalcost}</h2>
+        <h2><span class="promo">Your discount is $${discountVal.toFixed(2)}</span> Total: $${discountedPrice.toFixed(2)}</h2>
+        </div>`
+        document.getElementById('checkout').innerHTML = checkoutHTML
+
+        document.getElementById("summary").classList.remove('hidden')
+        document.getElementById("basket").classList.remove('hidden')
+
+    } else {
+
+    let checkoutHTML = ``
+    checkoutHTML += `<div class="checkout">
+    <h2>Total price:</h2>
+    <h2>$${totalcost}</h2>
     </div>`
     document.getElementById('checkout').innerHTML = checkoutHTML
 
     document.getElementById("summary").classList.remove('hidden')
     document.getElementById("basket").classList.remove('hidden')
+    }   
 }
 
 function deleteItem(itemId){
@@ -108,6 +163,7 @@ function deleteItem(itemId){
     }
        
 }
+
 
 function getMenuHTML(){
     let menuHTML = ``
@@ -135,25 +191,29 @@ function render(){
     document.getElementById('menu').innerHTML = getMenuHTML()
 }
 
-function orderNumber(){
-   let orderNo = Math.floor(Math.random()* 100)    
-   return orderNo
-}
 
 function submitOrder(){
+
     let customerName = ''
     customerName = document.getElementById("inputName").value
 
-    document.getElementById("modal-inner").innerText = "checking"
+    let orderNo = localStorage.getItem("orderNumber")
+
+    orderNo++
+
+    document.getElementById("modal-inner").innerHTML = `
+    <img class="gif" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif?cid=ecf05e47rpaz06nlbetff6dbbi8kj9lqf2xdoen3vm8tc6sz&rid=giphy.gif&ct=g" alt="checking card">
+    <h3>Processing...</h3>
+    `
 
     setTimeout(function(){
-        document.getElementById("modal-inner").innerText = "chuj"
+        document.getElementById("modal").classList.add("hidden")
         
-    }, 1500)
+    }, 3000)
 
     setTimeout(function(){    
     let summaryHTML = `<div class="confirmation">
-    <h1>Thanks ${customerName}, your order number is #${orderNumber()} and it is being prepared</h1>
+    <h1>Thanks ${customerName}, your order number is #${orderNo} and it is being prepared</h1>
     <button class="orderBtn" onClick="document.location.reload(true)">New order</button>
     </div>`
     console.log(customerName)
@@ -163,12 +223,13 @@ function submitOrder(){
     document.getElementById("btnWrapper").classList.add("hidden")
     document.getElementById("summary").innerHTML = summaryHTML
     },3000)
-}
+
+    localStorage.setItem("orderNumber", orderNo);
+    
+    }
 
 function closeModal(){
     document.getElementById("modal").classList.add("hidden")
 }
 
 render()
-
-
